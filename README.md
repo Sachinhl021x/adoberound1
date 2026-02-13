@@ -76,11 +76,19 @@ adobe-ai-agent/
 │   ├── build_index.py      # ETL: PDF -> Intelligent Chunking -> ChromaDB
 │   ├── serve.py            # FastAPI Microservice
 │   └── start.sh            # Launch Script
-└── src/                    # 🧠 Core Logic
-    ├── agent/              # LangGraph Workflow (The "Brain")
-    ├── extraction/         # Adobe PDF Parsing Logic
-    ├── retrieval/          # Hybrid Search Engine
-    └── generation/         # Bedrock Integration
+└── src/                    # 🧠 Source Code
+    ├── agent/              # LangGraph Workflow logic
+    ├── chunking/           # Text splitting implementations
+    ├── embeddings/         # Embedding generation (AWS Bedrock)
+    ├── eval/               # LLM-as-a-Judge (Graders)
+    ├── extraction/         # PDF Parsing & OCR
+    ├── generation/         # RAG Generator & Citations
+    ├── guardrails/         # Safety & Policy Checks
+    ├── ingestion/          # Data Loading & Preparation
+    ├── retrieval/          # Hybrid Retriever (BM25 + Semantic)
+    ├── tools/              # Custom Tools (e.g. WebSearch)
+    ├── ui/                 # Frontend Utilities
+    └── vectorstore/        # ChromaDB Wrapper
 ```
 
 ---
