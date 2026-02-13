@@ -1,8 +1,6 @@
 # Adobe AI Leadership Insight Agent 🧠🔴
 
-![Status](https://img.shields.io/badge/Status-Production%20Ready-success)
-![Context](https://img.shields.io/badge/Context-Adobe%20Interview%20Challenge-red)
-![Architecture](https://img.shields.io/badge/Architecture-Agentic%20RAG-blueviolet)
+
 
 ## 1. Executive Summary
 **Context**: Adobe leaders and analysts need to rapidly synthesize insights from complex internal documents (e.g., **Adobe Q4 FY2025 Earnings**, 10-K filings, Competitor Analysis) and cross-reference them with real-time market data.
