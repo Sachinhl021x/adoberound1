@@ -1,4 +1,4 @@
-# Adobe AI Leadership Insight Agent 🧠🔴
+# Adobe AI Leadership Insight Agent 
 
 
 
