@@ -1,0 +1,54 @@
+# Core RAG dependencies
+# Core RAG dependencies
+langchain-aws>=0.1.0
+ddgs>=1.0.0
+langchain-community>=0.0.13
+langchain-openai>=0.0.2
+
+# Vector store
+chromadb==0.4.22
+
+# Document loaders and processing
+pypdf==3.17.4
+pymupdf>=1.23.8  # Enhanced PDF extraction
+python-docx>=1.1.2,<2.0.0
+# Optional (can be installed separately in constrained envs)
+# docling>=1.0.0  # Layout-aware document extraction
+pillow>=10.0.0  # Image processing
+
+# Text splitting
+tiktoken==0.5.2
+
+# LLM providers
+# OpenAI (optional - using Bedrock instead)
+# openai==1.7.2
+
+# AWS Bedrock
+boto3>=1.34.72
+langchain-aws>=0.1.0
+
+# FastAPI (for serve.py)
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic>=2.7.4,<3.0.0
+pydantic-settings>=2.5.2,<3.0.0
+
+# Streamlit (for app.py)
+streamlit==1.30.0
+requests>=2.32.3,<3.0.0
+
+# Utilities
+python-dotenv==1.0.0
+rich==13.7.0
+tqdm==4.66.1
+
+# Development
+pytest==7.4.4
+black==23.12.1
+ruff==0.1.11
+
+# Advanced Retrieval & Evaluation
+rank_bm25==0.2.2
+ragas==0.0.22
+scikit-learn>=1.3.2
+duckduckgo-search>=5.0.0

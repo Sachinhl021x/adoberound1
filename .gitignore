@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.venv312/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Environment variables
+.env
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+server_debug.log
+
+# ChromaDB (Local Vector Store)
+chroma_db/
+
+# IDE
+.idea/
+.vscode/
