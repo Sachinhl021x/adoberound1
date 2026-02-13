@@ -115,15 +115,46 @@ adobe-ai-agent/
 
 ---
 
-## 6. Enterprise Considerations & Scalability
+## 6. Technical Stack & Module Architecture
 
--   **Security**: The system is designed to run entirely within a VPC. No data is sent to external model providers (using private AWS Bedrock endpoints).
--   **Observability**: The `LangGraph` architecture emits events for every state transition, allowing full audit trails of *why* the agent made a specific decision.
--   **Future Integrations**:
-    -   **Adobe PDF Services API**: For superior extraction of complex layout in marketing brochures.
-    -   **AEP (Adobe Experience Platform)**: Potential to ingest customer journey data for richer insights.
+### 6.1 Backend API Layer — FastAPI (`scripts/serve.py`)
+The backend is a **FastAPI** microservice that exposes the agent as a REST API. On startup, it initializes all components (embeddings, vector store, retriever, generator, agent graph) and serves them via `/query` and `/health` endpoints. CORS middleware is enabled for frontend communication.
 
----
+### 6.2 Agentic Orchestration — LangGraph (`src/agent/`)
+- **`graph.py`** — Defines the `AgentState` (a `TypedDict` with fields like `documents`, `question`, `answer`, `research_queries`, `hallucination_grade`, `is_web`) and builds a `StateGraph` with 8 nodes:
+  - `retrieve` → `grade_documents` → `generate` → `check_hallucination` → END
+  - Conditional edges route to `transform_query` (retry) or `plan_research` → `web_search` → `synthesize_research` → END
+- **`research.py`** — Contains `ResearchRefiner` (decomposes a complex question into 3+ sub-queries using an LLM) and `ResearchSynthesizer` (aggregates web results into a coherent report with citations). Both use `ChatBedrockConverse`.
 
-## 7. Challenge Outcome
-This submission demonstrates not just "RAG," but a **resilient, self-healing system** capable of handling the nuance required for high-level business intelligence at Adobe.
+### 6.3 Evaluation & Guardrails — LLM-as-a-Judge (`src/eval/`)
+We implemented two dedicated grader classes, each backed by a zero-temperature LLM call for deterministic outputs:
+- **`HallucinationGrader`** — Compares the generated answer against the retrieved context. Returns `yes`/`no` on whether the answer is grounded. If not grounded, the graph rejects the answer and falls back to web research.
+- **`RelevanceGrader`** — Evaluates whether retrieved documents are actually relevant to the user's question before generation begins. This prevents "garbage in, garbage out" scenarios.
+
+Both graders **fail open** (default to `relevant`/`grounded`) if the LLM call errors, to avoid blocking valid answers.
+
+### 6.4 Retrieval — Hybrid Search with RRF (`src/retrieval/`)
+The `DocumentRetriever` class implements a manual **Reciprocal Rank Fusion** algorithm:
+1.  **BM25 (Sparse)** — Initialized from all indexed documents using `langchain_community.retrievers.BM25Retriever`.
+2.  **ChromaDB (Dense)** — Semantic similarity search via AWS Bedrock Titan embeddings.
+3.  **Fusion** — Each result gets a score of `1/(60 + rank)` from each retriever. Scores are summed and sorted. Top-K documents are returned.
+
+### 6.5 Extraction & Chunking (`src/extraction/`, `src/chunking/`)
+- **`PDFExtractor`** — Uses `PyMuPDF (fitz)` to extract text, tables (converted to Markdown), and images per page. Output is staged as JSON files.
+- **`IntelligentChunker`** — Reads staged JSON, splits by logical sections (respecting headings), and creates separate chunks for tables and images. Each chunk carries metadata: `page`, `type`, `section_heading`, `chunk_size`.
+
+### 6.6 Generation (`src/generation/`)
+- **`AnswerGenerator`** — Uses `ChatBedrockConverse` (Claude / Nova) with a structured system prompt to generate answers grounded in retrieved context.
+- **`CitationAwareGenerator`** — Extends generation with inline citation numbers mapped to source documents and page numbers.
+
+### 6.7 Tools (`src/tools/`)
+- **`WebSearchTool`** — Wraps `DuckDuckGo Search (DDGS)`. Accepts a single query or a list of queries (from the research planner). Limits results per query (3 for multi-query, 5 for single) to keep context manageable.
+
+### 6.8 Frontend (`app.py`, `src/ui/`)
+- **Streamlit** dashboard with two modes: **Index Mode** (queries the FastAPI backend with pre-indexed data) and **Upload Mode** (processes documents in-memory for ad-hoc analysis).
+- Custom Adobe-themed styling via `src/ui/styles.py`.
+
+### 6.9 Infrastructure (`Dockerfile`, `docker-compose.yml`)
+- **Multi-stage Docker build** using `python:3.12-slim`.
+- **docker-compose** orchestrates the full stack (FastAPI + Streamlit) with environment variable injection and volume mounts for persistent indexes.
+
