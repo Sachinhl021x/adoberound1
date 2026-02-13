@@ -3,13 +3,13 @@
 
 
 ## 1. Executive Summary
-**Context**: Adobe leaders and analysts need to rapidly synthesize insights from complex internal documents (e.g., **Adobe Q4 FY2025 Earnings**, 10-K filings, Competitor Analysis) and cross-reference them with real-time market data.
+Leaders and analysts often need to quickly extract insights from complex internal documents and cross-reference them with real-time market data.
 
 **The Challenge**:
-1.  **Data Silos**: Financial data is locked in dense PDFs and tables that standard LLMs struggle to parse accurately.
-2.  **Trust**: Leadership cannot rely on "approximate" answers. A hallucination about Creative Cloud ARR or Digital Media growth is unacceptable.
+1.  **Complexity**: Financial data is locked in dense PDFs and tables that standard LLMs struggle to parse accurately.
+2.  **Trust**: Leadership cannot rely on approximate answers — hallucinated metrics are unacceptable.
 
-**Our Solution**: An **Autonomous Agentic System** engineered specifically for high-fidelity financial analysis. It combines **Hybrid Search** (for precise metric retrieval) with **Self-Correction** (to guarantee grounding) and **Deep Research** (to contextualize internal metrics with external market news).
+**Our Solution**: An Autonomous Agentic System that combines **Hybrid Search** (for precise metric retrieval) with **Self-Correction** (to guarantee grounding) and **Deep Research** (to contextualize internal metrics with external market data).
 
 ---
 
