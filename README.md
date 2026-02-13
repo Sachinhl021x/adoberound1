@@ -3,7 +3,7 @@
 
 
 ## 1. Executive Summary
-Leaders and analysts often need to quickly extract insights from complex internal documents and cross-reference them with real-time market data.
+Adobe AI Agentic RAG that extract insights from complex internal documents, cross-reference them with real-time market data and searches web to synthesis insights for leadership team.
 
 **The Challenge**:
 1.  **Complexity**: Financial data is locked in dense PDFs and tables that standard LLMs struggle to parse accurately.
